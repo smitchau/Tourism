@@ -1,0 +1,178 @@
+{% extends "header.html" %}
+{% load static %}
+{% block content %}
+
+<head>
+    <!-- Other head elements -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+</head>
+
+<div class="container-fluid bg-primary py-5 mb-5 hero-header">
+    <div class="container py-5">
+        <div class="row justify-content-center py-5">
+            <div class="col-lg-10 pt-lg-5 mt-lg-5 text-center">
+                <h1 class="display-3 text-white animated slideInDown">Welcome</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-center">
+                        <li class="breadcrumb-item"><a href="index">Home</a></li>
+                        <li class="breadcrumb-item text-white active" aria-current="page">SignUp</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!-- Navbar & Hero End -->
+
+<div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+    <div class="container">
+        <div class="booking p-5">
+            <div class="row g-5 align-items-center">
+                <div class="col-md-6 text-white">
+                    <h6 class="text-white text-uppercase">SignUp</h6>
+                    <p class="mb-4">Tourism is distinguished from exploration in that tourists follow a “beaten path,”
+                        benefit from established systems of provision, and, as befits pleasure-seekers, are generally
+                        insulated from difficulty, danger, and embarrassment. <br><br> Tourism, however, overlaps with other
+                        activities, interests, and processes, including, for example, pilgrimage. This gives rise to
+                        shared categories, such as “business tourism,” “sports tourism,” and “medical tourism”
+                        (international travel undertaken for the purpose of receiving medical care).</p>
+                </div>
+                <div class="col-md-6">
+                    <h1 class="text-white mb-4">SignUp Now</h1>
+                    <form method="post" action="{% url "signup" %}" onsubmit="return validateForm()">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <div class="form-floating">
+                                    <select name="role" class="form-select bg-transparent" id="select1" onchange="toggleAgeField()">
+                                        <option value="Tourist">Tourist</option>
+                                        <option value="Agent">Agent</option>
+                                    </select>
+                                    <label for="select1">Role</label>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-floating">
+                                    <input name="name" type="text" class="form-control bg-transparent" id="name"
+                                        placeholder="Your Name">
+                                    <label for="name">Your Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input name="email" type="email" class="form-control bg-transparent" id="email"
+                                        placeholder="Your Email">
+                                    <label for="email">Your Email</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input name="contact" type="text" class="form-control bg-transparent" id="contact"
+                                        placeholder="Your contact">
+                                    <label for="contact">Your contact</label>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-floating">
+                                    <textarea name="address" class="form-control bg-transparent" placeholder="Your Address"
+                                        id="address"></textarea>
+                                    <label for="address">Your Address</label>
+                                </div>
+                            </div>
+                            <div class="col-md-12" id="ageField" style="display: none;">
+                                <div class="form-floating">
+                                    <input name="age" type="number" class="form-control bg-transparent" id="age"
+                                        placeholder="Your Age">
+                                    <label for="age">Your Age</label>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-floating">
+                                    <input name="password" type="password" class="form-control bg-transparent" id="password"
+                                        placeholder="Your password">
+                                    <label for="password">Your password</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-outline-light w-100 py-3" type="submit">SignUp</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include jQuery and Toastr JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<script>
+    function toggleAgeField() {
+        var role = document.getElementById('select1').value;
+        var ageField = document.getElementById('ageField');
+        if (role == 'Agent') { // Agent
+            ageField.style.display = 'block';
+        } else { // Tourist
+            ageField.style.display = 'none';
+        }
+    }
+
+    function validateForm() {
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const contact = document.getElementById("contact").value;
+        const address = document.getElementById("address").value;
+        const password = document.getElementById("password").value;
+        const role = document.getElementById("select1").value;
+        const age = document.getElementById("age").value;
+
+        if (!name || !email || !contact || !address || !password || (role == 'Agent' && !age)) {
+            toastr.error("All fields are required.");
+            return false;
+        }
+
+        if (password.length < 8) {
+            toastr.error("Password must be at least 8 characters long.");
+            return false;
+        }
+
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) {
+            toastr.error("Enter a valid email address.");
+            return false;
+        }
+
+        return true;
+    }
+</script>
+
+<!-- Django messages and Toastr -->
+<script>
+    {% if messages %}
+        {% for message in messages %}
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "3000",  // 2 seconds
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+            toastr["{{ message.tags }}"]("{{ message }}");
+        {% endfor %}
+    {% endif %}
+</script>
+
+{% endblock %}

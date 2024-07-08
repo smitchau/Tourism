@@ -1,0 +1,161 @@
+{% extends "header.html" %}
+{% load static %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Form-v10 by Colorlib</title>
+    <!-- Mobile Specific Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!-- Font-->
+    <link rel="stylesheet" type="text/css" href="css/montserrat-font.css">
+    <link rel="stylesheet" type="text/css" href="fonts/material-design-iconic-font/css/material-design-iconic-font.min.css">
+    <!-- Main Style Css -->
+    <link rel="stylesheet" href="{% static 'css/style1.css' %}"/>
+    
+</head>
+<body class="form-v10">
+    
+    <div class="page-content" style="margin-top: 100px;">
+        <div class="form-v10-content">
+            <form class="form-detail" action="{% url "add_package" %}" method="post" id="myform" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-left">
+                    <h2>Package Information</h2>
+                    <div class="form-row">
+                        <input type="text" name="packagename" class="company"  placeholder="Package Name" required>
+                    </div>
+                    <div class="form-row">
+                        <input type="text" name="placename" class="company"  placeholder="Places Name" required>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-row form-row-1">
+                            <input type="text" name="movefrom"  class="input-text" placeholder="From" required>
+                        </div>
+                        <div class="form-row form-row-2">
+                            <input type="text" name="tofrom"  class="input-text" placeholder="to" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-row form-row-1">
+                            <label for="move_from">From date</label>
+                            <input type="date" name="movedate" id="move_from" class="input-text" placeholder="From" required>
+                        </div>
+                        <div class="form-row form-row-2">
+                            <label for="to_from">To date</label>
+                            <input type="date" name="todate" id="to_from" class="input-text" placeholder="to" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-row form-row-3">
+                            <input type="text" name="price" class="business" id="business" placeholder="Price" required>
+                        </div>
+                        <div class="form-row form-row-4">
+                            <input type="text" name="totaltourist" class="business" id="total_tourist" placeholder="Total tourist" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label for="place_images">Place Images</label>
+                        <input type="file" name="image" id="place_images" src="" alt="">
+                    </div>
+                </div>
+                <div class="form-right">
+                    <h2>Day Information</h2>
+                    <div id="day-information-container">
+                        <!-- Day Information will be dynamically added here -->
+                    </div>
+                    <div class="form-row-last">
+                        <input type="submit" name="register" class="register" value="Register Badge">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- JavaScript to dynamically update day information -->
+    <script>
+        // Function to calculate and update day information
+        function updateDayInformation() {
+            // Get selected dates
+            var fromDate = new Date(document.getElementById('move_from').value);
+            var toDate = new Date(document.getElementById('to_from').value);
+
+            // Check if toDate is before fromDate, if yes, adjust toDate to be the same as fromDate
+            if (toDate < fromDate) {
+                toDate = new Date(fromDate);
+                document.getElementById('to_from').valueAsDate = toDate; // Update input field
+            }
+
+            // Calculate the difference in days
+            var diffTime = Math.abs(toDate - fromDate);
+            var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            // Generate day information dynamically
+            var dayContent = '';
+            for (var i = 1; i <= diffDays; i++) {
+                dayContent += '<div class="form-row">';
+                dayContent += '<label for="" style="color: black;">Day ' + i + '</label>';
+                dayContent += '<label for="" style="color: black;">Description</label>';
+                dayContent += '<textarea name="day_description[]" style="width:400px;"></textarea>';
+                dayContent += '</div>';
+            }
+
+            // Update the day information container
+            document.getElementById('day-information-container').innerHTML = dayContent;
+        }
+
+        // Function to validate From date against current date
+        function validateFromDate() {
+            var today = new Date();
+            var selectedDate = new Date(document.getElementById('move_from').value);
+
+            if (selectedDate < today) {
+                alert("From date cannot be earlier than today's date.");
+                document.getElementById('move_from').valueAsDate = today; // Set From date to today's date
+            }
+
+            // Call updateDayInformation to update based on corrected From date
+            updateDayInformation();
+        }
+
+        // Listen for changes in date inputs
+        document.getElementById('move_from').addEventListener('change', validateFromDate);
+        document.getElementById('to_from').addEventListener('change', updateDayInformation);
+
+        // Initial update on page load (optional)
+        updateDayInformation();
+    </script>
+
+    <!-- Include jQuery and Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    
+    <!-- Django messages and Toastr -->
+    <script>
+        {% if messages %}
+            {% for message in messages %}
+                toastr.options = {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": true,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "3000",  // 2 seconds
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                };
+                toastr["{{ message.tags }}"]("{{ message }}");
+            {% endfor %}
+        {% endif %}
+    </script>
+
+</body>
+</html>
+
+{% endblock %}

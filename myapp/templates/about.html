@@ -1,0 +1,113 @@
+{% extends "header.html" %}
+{% load static %}
+{% block content %}
+
+        <div class="container-fluid bg-primary py-5 mb-5 hero-header">
+            <div class="container py-5">
+                <div class="row justify-content-center py-5">
+                    <div class="col-lg-10 pt-lg-5 mt-lg-5 text-center">
+                        <h1 class="display-3 text-white animated slideInDown">About Us</h1>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb justify-content-center">
+                                <li class="breadcrumb-item"><a href="{% url "index" %}">Home</a></li>
+                                <li class="breadcrumb-item text-white active" aria-current="page">About</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Navbar & Hero End -->
+
+
+    <!-- About Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s" style="min-height: 400px;">
+                    <div class="position-relative h-100">
+                        <img class="img-fluid position-absolute w-100 h-100" src="{% static 'img/about.jpg' %}" alt="" style="object-fit: cover;">
+                    </div>
+                </div>
+                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <h6 class="section-title bg-white text-start text-primary pe-3">About Us</h6>
+                    <h1 class="mb-4">Welcome to <span class="text-primary">Agent</span></h1>
+                    <p class="mb-4">Hello! We are here to assist you in enjoying every moment connected to our experiences. Our expert travel agent services offer you authentic and immersive travel experiences, providing memorable adventures and solutions to all situations within limited times.</p>
+                    <p class="mb-4">We are committed to making your experience simple and positive. We help you turn your dreams into reality.
+
+                        Thank you!</p>
+                    <div class="row gy-2 gx-4 mb-4">
+                        <div class="col-sm-6">
+                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Travel Planning</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Travel Management</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Special Experiences</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Comfortable Accommodation</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Translation and Assistance Services</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>24/7 Service</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- About End -->
+
+
+    <!-- Team Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="section-title bg-white text-center text-primary px-3">Travel Guide</h6>
+                <h1 class="mb-5">Meet Our Guide</h1>
+            </div>
+            <div class="row g-4">
+                
+                {% for i in user %}
+                {% if i.role == "Agent" %}
+                <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
+                    <div class="team-item">
+                        <div class="overflow-hidden">
+                            <img style="height: 350px; width:500px;" class="img-fluid" src="{{i.profile_image.url}}" alt="">
+                        </div>
+                        <div class="position-relative d-flex justify-content-center" style="margin-top: -19px;">
+                            {% if i.facebooklink %}
+                            <a class="btn btn-square mx-1" href="{{i.facebooklink}}" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                            {% else %}
+                            <a class="btn btn-square mx-1" href=""><i class="fab fa-facebook-f"></i></a>
+                            {% endif %}
+                            {% if i.instagram %}
+                            <a class="btn btn-square mx-1" href="{{i.instagram}}" target="_blank"><i class="fab fa-twitter"></i></a>
+                            {% else %}
+                            <a class="btn btn-square mx-1" href=""><i class="fab fa-twitter"></i></a>
+                            {% endif %}
+                            {% if i.twiter %}
+                            <a class="btn btn-square mx-1" href="{{i.twiter}}" target="_blank"><i class="fab fa-instagram"></i></a>
+                            {% else %}
+                            <a class="btn btn-square mx-1" href=""><i class="fab fa-instagram"></i></a>
+                            {% endif %}
+                        </div>
+                        <div class="text-center p-4">
+                            <h5 class="mb-0">{{i.name}}</h5>
+                            <small>{{i.disignation}}</small>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <!-- Team End -->
+
+    {% endblock %}

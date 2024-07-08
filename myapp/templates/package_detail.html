@@ -1,0 +1,141 @@
+{% extends "header.html" %}
+{% load static %}
+{% block content %}
+<!-- Styles -->
+<style>
+    .navbar-light .navbar-nav .nav-link {
+        font-family: 'Nunito', sans-serif;
+        position: relative;
+        color: rgb(0, 0, 0) !important;
+        font-size: 18px;
+        font-weight: 600;
+        outline: none;
+        transition: .5s;
+    }
+
+    .container {
+        padding-top: 100px;
+        width: 80%;
+        overflow: hidden;
+    }
+
+    .content {
+        background: #fff;
+        padding-top: 50px; /* Adjusted padding */
+        padding-bottom: 50px; /* Added padding */
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-top: 30px; /* Added margin */
+    }
+
+    .content h2 {
+        color: #333;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 10px;
+        margin-bottom: 20px; /* Added margin */
+    }
+
+    .content p {
+        color: #666;
+        line-height: 1.8;
+        margin-bottom: 15px; /* Added margin */
+    }
+
+    .image-gallery {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        margin-top: 30px; /* Added margin */
+    }
+
+    .image-gallery img {
+        width: 30%;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
+        cursor: pointer;
+    }
+
+    .image-gallery img:hover {
+        transform: scale(1.1);
+    }
+
+    /* Button Style */
+    .btn {
+        display: inline-block;
+        padding: 8px 16px;
+        font-size: 16px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        outline: none;
+        color: #fff;
+       
+        border: none;
+        border-radius: 5px;
+        
+        transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<!-- Content Section -->
+<section class="content">
+    <div class="container">
+        <!-- Package Detail -->
+        <div class="text-center">
+            <h6 class="section-title bg-white text-center text-primary px-3">{{ package }}</h6>
+            <h1 class="mb-5">Package Detail</h1>
+        </div>
+
+        <!-- Package Information -->
+        <div class="row g-3">
+            <div class="col-md-6">
+                <h2>{{ package.packagename }}</h2>
+                <p><strong>Places:</strong> {{ package.placename }}</p>
+                <p><strong>Moving From:</strong> {{ package.movefrom }}</p>
+                <p><strong>Moving To:</strong> {{ package.tofrom }}</p>
+                <p><strong>Price:</strong> {{ package.price }} $</p>
+                <p><strong>Moving Date:</strong> {{ package.movedate }}</p>
+                <p><strong>Moving To:</strong> {{ package.todate }}</p>
+                <p><strong>Duration:</strong> {{ count }} days</p>
+                <p><strong>Total Tourist:</strong> {{ package.totaltourist }}</p>
+                <p><strong>Available_slot:</strong> {{package.Available_slot}}</p>
+                {% if package.user == user %}
+                <!-- Update Package Button -->
+                <a href="{% url "update_package" package.pk %}" class="btn" style=" background-color: #007bff; box-shadow: 0 2px #0069d9;">Update Package</a>
+                
+                <!-- Delete Package Button -->
+                <a href="{% url 'delete_package' package.pk %}" class="btn" style="margin-left: 10px; background-color: #dc3545; box-shadow: 0 2px #bd2130;">Delete Package</a>
+                {% endif %}
+                {% if user.role != "Agent" %}
+                <a href="{% url "booking" %}" class="btn" style=" background-color: #007bff; box-shadow: 0 2px #0069d9;">Book Package</a>
+                {% endif %}
+                <a href="{% url "slot_member"  package.pk %}" class="btn" style=" background-color: green; box-shadow: 0 2px #0069d9;">Slot Members</a>
+
+            </div>
+            <div class="col-md-6">
+                <!-- Day Descriptions -->
+                {% if daydisc %}
+                    <h2>Day Descriptions</h2>
+                    {% for i in daydisc %}
+                        <h6>Day {{ forloop.counter }}</h6>
+                        <p>{{ i.description }}</p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Image Gallery -->
+        <div class="image-gallery">
+            {% for i in images %}
+                <img src="{{ i.image.url }}" alt="Image">
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
